@@ -1,0 +1,42 @@
+============================================================
+TEA YIELD PREDICTION MODEL - TRAINING SUMMARY
+============================================================
+
+MODEL CONFIGURATION
+------------------------------------------------------------
+Algorithm: XGBoost Regressor
+Objective: reg:squarederror
+Features: Rainfall, Temperature, Fertilizer
+Number of Features: 3
+
+BEST HYPERPARAMETERS (GridSearchCV)
+------------------------------------------------------------
+  colsample_bytree: 0.8
+  learning_rate: 0.1
+  max_depth: 3
+  min_child_weight: 5
+  n_estimators: 300
+  subsample: 1.0
+
+MODEL PERFORMANCE METRICS
+------------------------------------------------------------
+Root Mean Squared Error (RMSE): 30.76 kg
+Mean Absolute Error (MAE): 24.58 kg
+R² Score (Coefficient of Determination): 0.9890
+Model Accuracy: 98.90%
+
+FEATURE IMPORTANCE
+------------------------------------------------------------
+  Fertilizer: 0.7741
+  Rainfall: 0.2128
+  Temperature: 0.0131
+
+NORMALIZATION
+------------------------------------------------------------
+Features normalized using StandardScaler
+  - Method: Z-score normalization (mean=0, std=1)
+  - Applied to: All input features
+
+============================================================
+Training completed successfully!
+============================================================

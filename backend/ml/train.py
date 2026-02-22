@@ -20,7 +20,7 @@ class TeaYieldModel:
     XGBoost-based model for predicting tea yield with comprehensive evaluation.
     """
     
-    def __init__(self, data_path='data/tea_data.csv'):
+    def __init__(self, data_path='../data/tea_data.csv'):
         """
         Initialize the model with dataset path.
         
@@ -154,7 +154,7 @@ class TeaYieldModel:
             y_test: Test targets
             
         Returns:
-            dict: Evaluation metrics
+            tuple: (metrics dict, predictions, actual values)
         """
         print("\n" + "="*60)
         print("Evaluating model on test set...")
@@ -175,11 +175,11 @@ class TeaYieldModel:
         }
         
         print(f"\nTest Set Performance:")
-        print(f"  RMSE: {rmse:.2f} kg/hectare")
-        print(f"  MAE: {mae:.2f} kg/hectare")
+        print(f"  RMSE: {rmse:.2f} kg")
+        print(f"  MAE: {mae:.2f} kg")
         print(f"  R² Score: {r2:.4f}")
         
-        return metrics
+        return metrics, y_pred, y_test
     
     def generate_shap_analysis(self, X_test):
         """
@@ -230,6 +230,107 @@ class TeaYieldModel:
         plt.close()
         print("Feature importance plot saved to reports/figures/feature_importance.png")
     
+    def save_metrics_report(self, metrics, filepath='reports/training_summary.txt'):
+        """
+        Save training metrics summary to a text file.
+        
+        Args:
+            metrics (dict): Dictionary containing evaluation metrics
+            filepath (str): Path to save the report
+        """
+        os.makedirs('reports', exist_ok=True)
+        
+        with open(filepath, 'w') as f:
+            f.write("="*60 + "\n")
+            f.write("TEA YIELD PREDICTION MODEL - TRAINING SUMMARY\n")
+            f.write("="*60 + "\n\n")
+            
+            f.write("MODEL CONFIGURATION\n")
+            f.write("-" * 60 + "\n")
+            f.write(f"Algorithm: XGBoost Regressor\n")
+            f.write(f"Objective: reg:squarederror\n")
+            f.write(f"Features: {', '.join(self.feature_names)}\n")
+            f.write(f"Number of Features: {len(self.feature_names)}\n\n")
+            
+            f.write("BEST HYPERPARAMETERS (GridSearchCV)\n")
+            f.write("-" * 60 + "\n")
+            for param, value in self.best_params.items():
+                f.write(f"  {param}: {value}\n")
+            f.write("\n")
+            
+            f.write("MODEL PERFORMANCE METRICS\n")
+            f.write("-" * 60 + "\n")
+            f.write(f"Root Mean Squared Error (RMSE): {metrics['RMSE']:.2f} kg\n")
+            f.write(f"Mean Absolute Error (MAE): {metrics['MAE']:.2f} kg\n")
+            f.write(f"R² Score (Coefficient of Determination): {metrics['R2']:.4f}\n")
+            f.write(f"Model Accuracy: {metrics['R2']*100:.2f}%\n\n")
+            
+            f.write("FEATURE IMPORTANCE\n")
+            f.write("-" * 60 + "\n")
+            feature_importance = self.model.feature_importances_
+            sorted_idx = np.argsort(feature_importance)[::-1]
+            for idx in sorted_idx:
+                f.write(f"  {self.feature_names[idx]}: {feature_importance[idx]:.4f}\n")
+            f.write("\n")
+            
+            f.write("NORMALIZATION\n")
+            f.write("-" * 60 + "\n")
+            f.write("Features normalized using StandardScaler\n")
+            f.write("  - Method: Z-score normalization (mean=0, std=1)\n")
+            f.write("  - Applied to: All input features\n\n")
+            
+            f.write("="*60 + "\n")
+            f.write("Training completed successfully!\n")
+            f.write("="*60 + "\n")
+        
+        print(f"\nMetrics report saved to {filepath}")
+    
+    def save_accuracy_plot(self, y_true, y_pred, filepath='reports/figures/accuracy_plot.png'):
+        """
+        Create and save accuracy visualization plot (Actual vs Predicted).
+        
+        Args:
+            y_true: Actual values
+            y_pred: Predicted values
+            filepath (str): Path to save the plot
+        """
+        os.makedirs('reports/figures', exist_ok=True)
+        
+        # Create figure with subplots
+        fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+        
+        # Plot 1: Actual vs Predicted scatter plot
+        axes[0].scatter(y_true, y_pred, alpha=0.5, edgecolors='k', linewidth=0.5)
+        axes[0].plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], 
+                     'r--', lw=2, label='Perfect Prediction')
+        axes[0].set_xlabel('Actual Yield (kg)', fontsize=12)
+        axes[0].set_ylabel('Predicted Yield (kg)', fontsize=12)
+        axes[0].set_title('Actual vs Predicted Values', fontsize=14, fontweight='bold')
+        axes[0].legend()
+        axes[0].grid(True, alpha=0.3)
+        
+        # Calculate R² for annotation
+        r2 = r2_score(y_true, y_pred)
+        axes[0].text(0.05, 0.95, f'R² = {r2:.4f}', 
+                    transform=axes[0].transAxes, 
+                    fontsize=11, verticalalignment='top',
+                    bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+        
+        # Plot 2: Residuals plot
+        residuals = y_true - y_pred
+        axes[1].scatter(y_pred, residuals, alpha=0.5, edgecolors='k', linewidth=0.5)
+        axes[1].axhline(y=0, color='r', linestyle='--', lw=2)
+        axes[1].set_xlabel('Predicted Yield (kg)', fontsize=12)
+        axes[1].set_ylabel('Residuals (Actual - Predicted)', fontsize=12)
+        axes[1].set_title('Residual Plot', fontsize=14, fontweight='bold')
+        axes[1].grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        plt.savefig(filepath, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        print(f"Accuracy plot saved to {filepath}")
+    
     def save_model(self, model_path='models/xgboost_model.pkl'):
         """
         Save trained model and scaler to disk.
@@ -266,7 +367,13 @@ class TeaYieldModel:
         self.train_with_grid_search(X_train, y_train, X_val, y_val)
         
         # Evaluate on test set
-        metrics = self.evaluate_model(X_test, y_test)
+        metrics, y_pred, y_test = self.evaluate_model(X_test, y_test)
+        
+        # Save metrics report to text file
+        self.save_metrics_report(metrics)
+        
+        # Save accuracy plot
+        self.save_accuracy_plot(y_test, y_pred)
         
         # Generate SHAP analysis
         self.generate_shap_analysis(X_test)
