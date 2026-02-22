@@ -118,15 +118,9 @@ POST /predict
 Content-Type: application/json
 
 {
-  "rainfall": 2500.0,
-  "temperature": 24.0,
-  "fertilizer": 500.0,
-  "soil_ph": 5.0,
-  "humidity": 80.0,
-  "altitude": 1200.0,
-  "sunlight_hours": 6.0,
-  "plant_age": 20.0,
-  "pruning_frequency": 3
+  "rainfall": 150.0,
+  "temperature": 25.0,
+  "fertilizer": 400.0
 }
 ```
 
@@ -134,17 +128,11 @@ Response:
 
 ```json
 {
-  "prediction": 2450.5,
+  "prediction": 1222.63,
   "feature_importance": {
-    "Rainfall": 0.15,
-    "Temperature": 0.12,
-    "Fertilizer": 0.18,
-    "Soil_pH": 0.08,
-    "Humidity": 0.1,
-    "Altitude": 0.14,
-    "Sunlight_Hours": 0.11,
-    "Plant_Age": 0.07,
-    "Pruning_Frequency": 0.05
+    "Rainfall": 0.35,
+    "Temperature": 0.33,
+    "Fertilizer": 0.32
   }
 }
 ```
@@ -168,7 +156,7 @@ curl http://localhost:8000/health
 # Prediction
 curl -X POST http://localhost:8000/predict \
   -H "Content-Type: application/json" \
-  -d '{"rainfall":2500,"temperature":24,"fertilizer":500,"soil_ph":5.0,"humidity":80,"altitude":1200,"sunlight_hours":6,"plant_age":20,"pruning_frequency":3}'
+  -d '{"rainfall":150,"temperature":25,"fertilizer":400}'
 ```
 
 ### Test with Python
@@ -182,15 +170,9 @@ print(response.json())
 
 # Prediction
 data = {
-    "rainfall": 2500.0,
-    "temperature": 24.0,
-    "fertilizer": 500.0,
-    "soil_ph": 5.0,
-    "humidity": 80.0,
-    "altitude": 1200.0,
-    "sunlight_hours": 6.0,
-    "plant_age": 20.0,
-    "pruning_frequency": 3
+    "rainfall": 150.0,
+    "temperature": 25.0,
+    "fertilizer": 400.0
 }
 response = requests.post('http://localhost:8000/predict', json=data)
 print(response.json())
@@ -198,21 +180,15 @@ print(response.json())
 
 ## 📊 ML Model Details
 
-### Features (9 total)
+### Features (3 total)
 
-1. **Rainfall** (mm): 1500-4000
-2. **Temperature** (°C): 18-32
-3. **Fertilizer** (kg/hectare): 200-800
-4. **Soil_pH**: 4.0-6.0
-5. **Humidity** (%): 60-95
-6. **Altitude** (meters): 500-2000
-7. **Sunlight_Hours** (per day): 3-9
-8. **Plant_Age** (years): 5-40
-9. **Pruning_Frequency** (per year): 1-4
+1. **Rainfall** (mm): 0-500
+2. **Temperature** (°C): 0-50
+3. **Fertilizer** (kg): 0-1000
 
 ### Target Variable
 
-- **Yield** (kg/hectare): 1000-4000
+- **Yield** (kg): 500-2500
 
 ### Training Configuration
 

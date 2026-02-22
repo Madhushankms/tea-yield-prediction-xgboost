@@ -4,19 +4,13 @@ A complete full-stack machine learning system for predicting tea leaf yield usin
 
 ## 🎯 Project Overview
 
-This system predicts tea yield (kg/hectare) based on 9 key features:
+This system predicts tea yield (kg) based on 3 key features:
 
 - Rainfall (mm)
 - Temperature (°C)
-- Fertilizer (kg/hectare)
-- Soil pH
-- Humidity (%)
-- Altitude (meters)
-- Sunlight Hours (per day)
-- Plant Age (years)
-- Pruning Frequency (per year)
+- Fertilizer (kg)
 
-**Dataset**: 60,000 synthetic records  
+**Dataset**: 60,000 records  
 **Model**: XGBoost Regressor (NOT deep learning)  
 **Problem Type**: Regression
 
@@ -130,23 +124,17 @@ POST /predict
 Content-Type: application/json
 
 {
-  "rainfall": 2500.0,
-  "temperature": 24.0,
-  "fertilizer": 500.0,
-  "soil_ph": 5.0,
-  "humidity": 80.0,
-  "altitude": 1200.0,
-  "sunlight_hours": 6.0,
-  "plant_age": 20.0,
-  "pruning_frequency": 3
+  "rainfall": 150.0,
+  "temperature": 25.0,
+  "fertilizer": 400.0
 }
 
 Response: {
-  "prediction": 2450.5,
+  "prediction": 1222.63,
   "feature_importance": {
-    "Rainfall": 0.15,
-    "Temperature": 0.12,
-    ...
+    "Rainfall": 0.35,
+    "Temperature": 0.33,
+    "Fertilizer": 0.32
   }
 }
 ```
@@ -213,7 +201,7 @@ cd backend
 curl http://localhost:8000/health
 curl -X POST http://localhost:8000/predict \
   -H "Content-Type: application/json" \
-  -d '{"rainfall":2500,"temperature":24,"fertilizer":500,"soil_ph":5.0,"humidity":80,"altitude":1200,"sunlight_hours":6,"plant_age":20,"pruning_frequency":3}'
+  -d '{"rainfall":150,"temperature":25,"fertilizer":400}'
 ```
 
 ### Test Frontend

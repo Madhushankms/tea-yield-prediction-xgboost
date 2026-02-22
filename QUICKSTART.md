@@ -127,7 +127,7 @@ Expected response:
 ```bash
 curl -X POST http://localhost:8000/predict \
   -H "Content-Type: application/json" \
-  -d "{\"rainfall\":2500,\"temperature\":24,\"fertilizer\":500,\"soil_ph\":5.0,\"humidity\":80,\"altitude\":1200,\"sunlight_hours\":6,\"plant_age\":20,\"pruning_frequency\":3}"
+  -d "{\"rainfall\":150,\"temperature\":25,\"fertilizer\":400}"
 ```
 
 ### Test Frontend

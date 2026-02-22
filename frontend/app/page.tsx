@@ -94,26 +94,6 @@ export default function Home() {
             )}
           </div>
         </div>
-
-        {/* Footer */}
-        <div className="mt-12 text-center">
-          <div className="bg-white rounded-lg shadow-md p-6 max-w-3xl mx-auto">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              About This System
-            </h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              This system uses an XGBoost regression model trained on 60,000 tea
-              farm records. It analyzes 9 key environmental and agricultural
-              features to predict yield with high accuracy. Feature importance
-              is calculated using SHAP values for full transparency.
-            </p>
-            <div className="mt-4 flex justify-center space-x-6 text-xs text-gray-500">
-              <span>✓ GridSearchCV Optimized</span>
-              <span>✓ SHAP Explainability</span>
-              <span>✓ Professional Grade</span>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   );

@@ -34,68 +34,30 @@ def generate_tea_yield_dataset(n_samples=60000, random_state=42):
     fertilizer = np.random.normal(500, 150, n_samples)
     fertilizer = np.clip(fertilizer, 200, 800)
     
-    # Soil pH: 4.5-5.5 (tea prefers acidic soil)
-    soil_ph = np.random.normal(5.0, 0.3, n_samples)
-    soil_ph = np.clip(soil_ph, 4.0, 6.0)
-    
-    # Humidity: 70-90%
-    humidity = np.random.normal(80, 5, n_samples)
-    humidity = np.clip(humidity, 60, 95)
-    
-    # Altitude: 500-2000 meters (highland tea)
-    altitude = np.random.normal(1200, 300, n_samples)
-    altitude = np.clip(altitude, 500, 2000)
-    
-    # Sunlight hours: 4-8 hours per day
-    sunlight_hours = np.random.normal(6, 1, n_samples)
-    sunlight_hours = np.clip(sunlight_hours, 3, 9)
-    
-    # Age of tea plants: 5-40 years
-    plant_age = np.random.normal(20, 8, n_samples)
-    plant_age = np.clip(plant_age, 5, 40)
-    
-    # Pruning frequency: 1-4 times per year
-    pruning_frequency = np.random.randint(1, 5, n_samples)
-    
     # Generate target variable (Yield) with realistic relationships
-    # Yield in kg/hectare (typical: 1500-3500 kg/hectare)
-    yield_base = 2000
+    # Yield in kg (typical: 800-2000 kg)
+    yield_base = 1200
     
-    # Positive influences
+    # Influences from 3 features
     yield_value = (
         yield_base +
-        (rainfall - 2500) * 0.3 +
-        (temperature - 24) * 50 +
-        (fertilizer - 500) * 1.2 +
-        (humidity - 80) * 15 +
-        (sunlight_hours - 6) * 80 +
-        pruning_frequency * 100 +
-        # Optimal pH around 5.0
-        -200 * np.abs(soil_ph - 5.0) +
-        # Altitude effect (moderate altitude is optimal)
-        0.5 * altitude - 0.0002 * (altitude - 1200) ** 2 +
-        # Plant age effect (peak production between 15-30 years)
-        -2 * np.abs(plant_age - 20)
+        (rainfall - 250) * 1.2 +
+        (temperature - 25) * 20 +
+        (fertilizer - 500) * 0.8
     )
     
     # Add realistic noise
-    noise = np.random.normal(0, 200, n_samples)
+    noise = np.random.normal(0, 100, n_samples)
     yield_value = yield_value + noise
     
     # Clip to realistic range
-    yield_value = np.clip(yield_value, 1000, 4000)
+    yield_value = np.clip(yield_value, 500, 2500)
     
     # Create DataFrame
     data = pd.DataFrame({
         'Rainfall': rainfall,
         'Temperature': temperature,
         'Fertilizer': fertilizer,
-        'Soil_pH': soil_ph,
-        'Humidity': humidity,
-        'Altitude': altitude,
-        'Sunlight_Hours': sunlight_hours,
-        'Plant_Age': plant_age,
-        'Pruning_Frequency': pruning_frequency,
         'Yield': yield_value
     })
     
@@ -104,12 +66,6 @@ def generate_tea_yield_dataset(n_samples=60000, random_state=42):
         'Rainfall': 1,
         'Temperature': 1,
         'Fertilizer': 1,
-        'Soil_pH': 2,
-        'Humidity': 1,
-        'Altitude': 0,
-        'Sunlight_Hours': 1,
-        'Plant_Age': 0,
-        'Pruning_Frequency': 0,
         'Yield': 1
     })
     
