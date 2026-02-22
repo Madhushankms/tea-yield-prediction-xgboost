@@ -121,7 +121,7 @@ export default function PredictionForm({
           type="submit"
           className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold py-4 px-6 rounded-lg hover:from-green-700 hover:to-emerald-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl"
         >
-          🔮 Predict Tea Yield
+          Predict Tea Yield
         </button>
       </form>
 

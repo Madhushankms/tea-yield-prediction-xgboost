@@ -25,17 +25,11 @@ export default function Home() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            🍃 Tea Yield Prediction System
+            Tea Yield Prediction System
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             AI-powered tea leaf yield prediction using advanced machine learning
           </p>
-          <div className="mt-4 inline-flex items-center px-4 py-2 bg-green-100 rounded-full">
-            <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-            <span className="text-sm font-medium text-green-800">
-              XGBoost Model Active
-            </span>
-          </div>
         </div>
 
         {/* Main Content Grid */}
